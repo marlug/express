@@ -38,6 +38,20 @@ describe('req', function(){
         .get('/?user.name=tj')
         .expect(200, '{"user.name":"tj"}', done);
       });
+
+      it('should parse more than 20 repeated values as an array', function (done) {
+        var app = createApp('extended');
+        var ids = [];
+        var expected = [];
+        for (var i = 0; i < 25; i++) {
+          ids.push('ids=' + i);
+          expected.push(String(i));
+        }
+
+        request(app)
+        .get('/?' + ids.join('&'))
+        .expect(200, JSON.stringify({ ids: expected }), done);
+      });
     });
 
     describe('when "query parser" is simple', function () {
